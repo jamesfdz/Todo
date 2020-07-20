@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
                 EditText alertTaskContent = alert_layout.findViewById(R.id.alert_task_content);
                 String taskContent = alertTaskContent.getText().toString();
-                //TODO add data in database
+
                 Map<String, Object> itemMap = new HashMap<>();
                 itemMap.put("task_content", taskContent);
                 itemMap.put("checked", false);
