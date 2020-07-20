@@ -1,27 +1,29 @@
 package com.codechez.todo;
 
-public class ItemList {
-    private String text;
-    private boolean selected;
+public class ItemList extends ItemId {
+    private String task_content;
+    private boolean checked;
 
-    public ItemList(String text, boolean selected) {
-        this.text = text;
-        this.selected = selected;
+    public ItemList(){}
+
+    public ItemList(String task_content, boolean checked) {
+        this.task_content = task_content;
+        this.checked = checked;
     }
 
-    public String getText() {
-        return text;
+    public String getTask_content() {
+        return task_content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTask_content(String task_content) {
+        this.task_content = task_content;
     }
 
-    public boolean getSelected() {
-        return selected;
+    public boolean isChecked() {
+        return checked;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

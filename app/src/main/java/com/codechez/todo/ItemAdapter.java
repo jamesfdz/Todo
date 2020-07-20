@@ -1,6 +1,7 @@
 package com.codechez.todo;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,11 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private List<ItemList> listOfItems;
+    private Context context;
 
-    public ItemAdapter(List<ItemList> listOfItems) {
+    public ItemAdapter(List<ItemList> listOfItems, Context ctx) {
         this.listOfItems = listOfItems;
+        this.context = ctx;
     }
 
     @NonNull
@@ -30,10 +33,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int pos = position;
-        holder.mContent.setText(listOfItems.get(pos).getText());
-        holder.mCheckBox.setChecked(listOfItems.get(pos).getSelected());
 
-        holder.mCheckBox.setTag(listOfItems.get(pos));
+        //get data from firestore
+        String content = listOfItems.get(pos).getTask_content();
+        boolean checkbox = listOfItems.get(pos).isChecked();
+        String itemId = listOfItems.get(pos).ItemId;
+
+        //set data in the view
+        holder.mContent.setText(content);
+        holder.mCheckBox.setChecked(checkbox);
 
         holder.mCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +54,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 // }
             }
         });
+
+
+        //TODO deleting the items when delete button is clicked
+
     }
 
     @Override
@@ -63,9 +75,5 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             mContent = itemView.findViewById(R.id.content);
             mCheckBox = itemView.findViewById(R.id.checkBox);
         }
-    }
-
-    public List<ItemList> getListOfItems(){
-        return listOfItems;
     }
 }
