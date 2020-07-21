@@ -98,6 +98,15 @@ public class MainActivity extends AppCompatActivity {
                             itemLists.add(items);
 
                             adapter.notifyDataSetChanged();
+                        }else if(doc.getType() == DocumentChange.Type.REMOVED){
+                            int deletedIndex = doc.getOldIndex();
+                            adapter.removeItem(deletedIndex);
+                        }else if(doc.getType() == DocumentChange.Type.MODIFIED){
+                            int modifiedIndex = doc.getOldIndex();
+                            boolean checkedOrNo = (boolean) doc.getDocument().get("checked");
+                            itemLists.get(modifiedIndex).setChecked(checkedOrNo);
+                            adapter.changeItem(modifiedIndex, itemLists.get(modifiedIndex));
+                            Log.d(TAG, "onEvent: "+ modifiedIndex);
                         }
                     }
                 }

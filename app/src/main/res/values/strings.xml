@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Todo</string>
     <string name="task_content">Task Content</string>
+    <string name="delete">delete</string>
 </resources>

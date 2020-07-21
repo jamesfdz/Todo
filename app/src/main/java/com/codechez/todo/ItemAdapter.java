@@ -11,15 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.rpc.context.AttributeContext;
 
@@ -60,9 +63,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         //set data in the view
         holder.mContent.setText(content);
         holder.mCheckBox.setChecked(checkbox);
+        //set Tag
         holder.mCheckBox.setTag(itemId);
-
         holder.mContent.setTag(itemId);
+        holder.delete.setTag(itemId);
 
         //strike the text if checkbox is checked
         if(holder.mCheckBox.isChecked()){
@@ -89,6 +93,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         });
 
         //TODO deleting the items when delete button is clicked
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String deleteTag = v.getTag().toString();
+                db.collection("Items").document(deleteTag).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.getResult().exists()){
+                            db.collection("Items").document(deleteTag).delete();
+                        }
+                    }
+                });
+            }
+        });
 
     }
 
@@ -97,17 +115,33 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         return listOfItems.size();
     }
 
+    public void removeItem(int position) {
+        listOfItems.remove(position);
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+    }
+
+    public void changeItem(int position, ItemList list) {
+        listOfItems.set(position, list);
+        // notify item added by position
+        notifyItemChanged(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mContent;
         private CheckBox mCheckBox;
         private View mView;
+        private ImageView delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
             mContent = itemView.findViewById(R.id.content);
             mCheckBox = itemView.findViewById(R.id.checkBox);
+            delete = itemView.findViewById(R.id.delete);
         }
 
         public void strikeIt(Object tag){
