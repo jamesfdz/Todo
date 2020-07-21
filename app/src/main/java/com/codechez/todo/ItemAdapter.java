@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.rpc.context.AttributeContext;
 
 import java.util.HashMap;
@@ -87,8 +90,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 }else{
                     db.collection("Items").document(checkboxTag).update("checked", false);
                 }
-
-                holder.strikeIt(tag);
             }
         });
 
@@ -102,6 +103,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if(task.getResult().exists()){
                             db.collection("Items").document(deleteTag).delete();
+                            Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -142,17 +144,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             mContent = itemView.findViewById(R.id.content);
             mCheckBox = itemView.findViewById(R.id.checkBox);
             delete = itemView.findViewById(R.id.delete);
-        }
-
-        public void strikeIt(Object tag){
-
-            TextView textView = mView.findViewWithTag(tag);
-
-            if(!textView.getPaint().isStrikeThruText()){
-                textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }else{
-                textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            }
         }
     }
 }

@@ -88,26 +88,26 @@ public class MainActivity extends AppCompatActivity {
         registration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (!value.isEmpty()){
-                    for (DocumentChange doc: value.getDocumentChanges()){
-                        if(doc.getType() == DocumentChange.Type.ADDED){
+                for (DocumentChange doc: value.getDocumentChanges()){
+                    if(doc.getType() == DocumentChange.Type.ADDED){
 
-                            String itemId = doc.getDocument().getId();
+                        String itemId = doc.getDocument().getId();
 
-                            ItemList items = doc.getDocument().toObject(ItemList.class).withId(itemId);
-                            itemLists.add(items);
+                        ItemList items = doc.getDocument().toObject(ItemList.class).withId(itemId);
+                        itemLists.add(items);
 
-                            adapter.notifyDataSetChanged();
-                        }else if(doc.getType() == DocumentChange.Type.REMOVED){
-                            int deletedIndex = doc.getOldIndex();
-                            adapter.removeItem(deletedIndex);
-                        }else if(doc.getType() == DocumentChange.Type.MODIFIED){
-                            int modifiedIndex = doc.getOldIndex();
-                            boolean checkedOrNo = (boolean) doc.getDocument().get("checked");
-                            itemLists.get(modifiedIndex).setChecked(checkedOrNo);
-                            adapter.changeItem(modifiedIndex, itemLists.get(modifiedIndex));
-                            Log.d(TAG, "onEvent: "+ modifiedIndex);
-                        }
+                        adapter.notifyDataSetChanged();
+                    }else if(doc.getType() == DocumentChange.Type.REMOVED){
+
+                        int deletedIndex = doc.getOldIndex();
+                        adapter.removeItem(deletedIndex);
+
+                    }else if(doc.getType() == DocumentChange.Type.MODIFIED){
+                        int modifiedIndex = doc.getOldIndex();
+                        boolean checkedOrNo = (boolean) doc.getDocument().get("checked");
+                        itemLists.get(modifiedIndex).setChecked(checkedOrNo);
+                        adapter.changeItem(modifiedIndex, itemLists.get(modifiedIndex));
+                        Log.d(TAG, "onEvent: "+ modifiedIndex);
                     }
                 }
             }
