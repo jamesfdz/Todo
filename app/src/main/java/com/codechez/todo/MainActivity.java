@@ -71,17 +71,6 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ItemAdapter(itemLists, this);
         recyclerView.setAdapter(adapter);
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        registration.remove();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         // Getting data from Firestore
         Query query = firebaseFirestore.collection("Items");
 
@@ -102,16 +91,17 @@ public class MainActivity extends AppCompatActivity {
                         int deletedIndex = doc.getOldIndex();
                         adapter.removeItem(deletedIndex);
 
-                    }else if(doc.getType() == DocumentChange.Type.MODIFIED){
-                        int modifiedIndex = doc.getOldIndex();
-                        boolean checkedOrNo = (boolean) doc.getDocument().get("checked");
-                        itemLists.get(modifiedIndex).setChecked(checkedOrNo);
-                        adapter.changeItem(modifiedIndex, itemLists.get(modifiedIndex));
-                        Log.d(TAG, "onEvent: "+ modifiedIndex);
                     }
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        registration.remove();
     }
 
     private void showAddTaskAlert(View v){

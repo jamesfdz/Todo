@@ -72,18 +72,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.delete.setTag(itemId);
 
         //strike the text if checkbox is checked
-        if(holder.mCheckBox.isChecked()){
-            holder.mContent.setPaintFlags(holder.mContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }else{
-            holder.mContent.setPaintFlags(holder.mContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+//        if(holder.mCheckBox.isChecked()){
+//            holder.mContent.setPaintFlags(holder.mContent.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//        }else{
+//            holder.mContent.setPaintFlags(holder.mContent.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+//        }
 
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //update checkbox data in db
                 String checkboxTag = buttonView.getTag().toString();
-                Object tag = buttonView.getTag();
 
                 if(isChecked){
                     db.collection("Items").document(checkboxTag).update("checked", true);
@@ -123,12 +122,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         // to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemRemoved(position);
-    }
-
-    public void changeItem(int position, ItemList list) {
-        listOfItems.set(position, list);
-        // notify item added by position
-        notifyItemChanged(position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
